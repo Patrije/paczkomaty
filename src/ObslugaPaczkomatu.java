@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ObslugaPaczkomatu {
@@ -82,6 +84,7 @@ dodaniepaczkomatu
         String idPaczkomatuNadawcy = scanner.next();
         System.out.println("poda stan ");
         Stan stan = Stan.valueOf(scanner.next());
+
         for(int i=0; i<paczkomaty.size(); i++){
             if(paczkomaty.get(i).getId().equals(idPaczkomatu)){
                 paczkomaty.get(i).dodajPaczke(new Paczka(idPaczki, idPaczkomatuPOdbiorcy, idPaczkomatuNadawcy, rozmiarPaczki, stan));
@@ -103,12 +106,43 @@ dodaniepaczkomatu
     }
 
     static void dodajPaczkomat(){
-        System.out.println("Podaj nazwe paczkomatu");
-        String nazwa = scanner.next();
-        System.out.println("Podaj id paczkomatu");
-        String id = scanner.next();
-        System.out.println("podaj adres paczkomatu");
-        String adres = scanner.next();
+        String nazwa;
+        String id;
+        String adres;
+
+            System.out.println("Podaj nazwe paczkomatu");
+            nazwa = scanner.next();
+            System.out.println("Podaj id paczkomatu");
+             id = scanner.next();
+            System.out.println("podaj adres paczkomatu");
+             adres = scanner.next();
+                if(nazwa.startsWith("0") || id.isBlank()|| adres.isEmpty()){
+                    System.out.println("zle dane");
+                    return;
+                }
+/*
+1	[abc]	a, b, or c (simple class)
+2	[^abc]	Any character except a, b, or c (negation)
+3	[a-zA-Z]	a through z or A through Z, inclusive (range)
+4	[a-d[m-p]]	a through d, or m through p: [a-dm-p] (union)
+5	[a-z&&[def]]	d, e, or f (intersection)
+6	[a-z&&[^bc]]	a through z, except for b and c: [ad-z] (subtraction)
+7	[a-z&&[^m-p]]	a through z, and not m through p: [a-lq-z](subtraction)
+
+X?	X occurs once or not at all
+X+	X occurs once or more times
+X*	X occurs zero or more times
+X{n}	X occurs n times only
+X{n,}	X occurs n or more times
+X{y,z}	X occurs at least y times but less than z times
+ */
+        Pattern p = Pattern.compile("[A-Z]{2}[0-9]{3}");//. represents single character
+        Matcher m = p.matcher(nazwa);
+        boolean b = m.matches();
+        if(!b){
+            System.out.println("nie spelania");
+            return;
+        }
 
         Paczkomat paczkomat = new Paczkomat(id, nazwa, adres);
         paczkomaty.add(paczkomat);
